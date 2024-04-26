@@ -23,7 +23,7 @@ app.frame('/:address', (c) => {
     action: `/finish/beg`,
     image: 'https://i.imgur.com/GIuavK8.gif',
     intents: [
-      <TextInput placeholder={`Donation Amount (ETH)`}/>,
+      <TextInput placeholder={`Donation Amount (ETH) > 0`}/>,
       <Button.Transaction target={`/${c.req.param('address')}/donate`}>DONATE TO THE BEGGAR</Button.Transaction>,
     ],
   });
@@ -42,6 +42,10 @@ app.frame('/finish/beg', (c) => {
 app.transaction('/:address/donate', (c) => {
   const { inputText, req } = c
   const address = req.param('address') as Address;
+
+  if (!inputText) {
+    return new Response('Please input a desired donation amount', { status: 400 })
+  }
 
   return c.contract({
     abi,
