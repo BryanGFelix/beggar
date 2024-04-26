@@ -7,7 +7,7 @@ import { handle } from 'frog/next'
 import { serveStatic } from 'frog/serve-static'
 import { abi } from './abi';
 import type { Address } from 'viem';
-import { baseSepolia } from 'viem/chains';
+import { base, baseSepolia } from 'viem/chains';
 
 const app = new Frog({
   basePath: '/api',
@@ -30,11 +30,11 @@ app.frame('/:address', (c) => {
 });
 
 app.frame('/finish/beg', (c) => {
+  const params = c.initialPath.split('/');
   return c.res({
-    action: c.initialPath,
     image: 'https://i.imgur.com/FUoMZLX.gif',
     intents: [
-      <Button>DONATE MORE MONEY</Button>
+      <Button action={`/${params[2]}`}>DONATE MORE MONEY</Button>
     ]
   })
 });
@@ -51,8 +51,8 @@ app.transaction('/:address/donate', (c) => {
     abi,
     functionName: 'donate',
     args: [address],
-    chainId: `eip155:${baseSepolia.id}`,
-    to: '0x72b1B5E1C1662fD726538DA14C928669093b9Ef5',
+    chainId: `eip155:${base.id}`,
+    to: '0xE68538bcD77DF90A6CB466c5611603A829fAFd22',
     value: parseEther(inputText)
   });
 })

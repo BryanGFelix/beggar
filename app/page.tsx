@@ -7,7 +7,7 @@ import Generate from './generate';
 
 export async function generateMetadata(): Promise<Metadata> {
   const frameTags = await getFrameMetadata(
-    'https://beggar-qp4f.vercel.app/api',
+    `https://beggar-qp4f.vercel.app/api`,
   )
   return {
     other: frameTags,
