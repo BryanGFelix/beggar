@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 
 import styles from './page.module.css'
 import Generate from './generate';
+//test
 
 export async function generateMetadata(): Promise<Metadata> {
   const frameTags = await getFrameMetadata(
