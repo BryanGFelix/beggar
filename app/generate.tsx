@@ -7,7 +7,7 @@ const Generate = () => {
   const [beggarUrl, setBeggarUrl] = useState('');
 
   const generateUrl = () => {
-    setBeggarUrl('https://basedbeggar.com/' + address);
+    setBeggarUrl('https://basebeg.com/' + address);
   }
 
   const copyToClipboard = () => {
