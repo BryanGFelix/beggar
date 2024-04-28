@@ -8,6 +8,7 @@ import { serveStatic } from 'frog/serve-static'
 import { abi } from './abi';
 import type { Address } from 'viem';
 import { base, baseSepolia } from 'viem/chains';
+import css from 'styled-jsx/css';
 
 const app = new Frog({
   basePath: '/api',
@@ -18,15 +19,45 @@ const app = new Frog({
 // Uncomment to use Edge Runtime
 // export const runtime = 'edge'
 
-app.frame('/:address', (c) => {
+app.frame('/posting/beggar', (c) => {
+  const {initialPath, inputText} = c;
+  const params = initialPath.split('/');
+
+  if (!inputText) {
+    return new Response('Must include a wallet address', { status: 400 })
+  }
+
   return c.res({
-    action: `/finish/beg`,
     image: 'https://i.imgur.com/GIuavK8.gif',
     intents: [
-      <TextInput placeholder={`Donation Amount (ETH) > 0`}/>,
-      <Button.Transaction target={`/${c.req.param('address')}/donate`}>DONATE TO THE BEGGAR</Button.Transaction>,
+      <Button.Link href={`https://warpcast.com/~/compose?embeds%5B%5D=https%3A%2F%2Fbasebeg.com%2Fapi%2F${inputText}%0A`}>POST YOUR BEGGAR FRAME</Button.Link>,
+      <Button.Reset>CANCEL</Button.Reset>
     ],
   });
+});
+
+app.frame('/:address', (c) => {
+  
+  if (c.buttonValue === 'genbeggar') {
+    return c.res({
+      image: 'https://i.imgur.com/GIuavK8.gif',
+      intents: [
+        <TextInput placeholder={'Your wallet address...'}/>,
+        <Button action='/posting/beggar'>GENERATE YOUR BEGGAR FRAME</Button>,
+        <Button.Reset>CANCEL</Button.Reset>
+      ],
+    });
+  } else {
+    return c.res({
+      image: 'https://i.imgur.com/GIuavK8.gif',
+      intents: [
+        <TextInput placeholder={`Donation Amount (ETH) > 0`}/>,
+        <Button.Transaction action='/finish/beg' target={`/${c.req.param('address')}/donate`}>DONATE TO THE BEGGAR</Button.Transaction>,
+        <Button value={'genbeggar'}>GET YOUR BEGGAR FRAME</Button>
+      ],
+    });
+  }
+
 });
 
 app.frame('/finish/beg', (c) => {
@@ -34,7 +65,8 @@ app.frame('/finish/beg', (c) => {
   return c.res({
     image: 'https://i.imgur.com/FUoMZLX.gif',
     intents: [
-      <Button action={`/${params[2]}`}>DONATE MORE MONEY</Button>
+      <Button.Reset>DONATE MORE MONEY</Button.Reset>,
+      <Button action='/generate/beggar'>GET YOUR BEGGAR FRAME</Button>
     ]
   })
 });
