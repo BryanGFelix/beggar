@@ -61,12 +61,10 @@ app.frame('/:address', (c) => {
 });
 
 app.frame('/finish/beg', (c) => {
-  const params = c.initialPath.split('/');
   return c.res({
     image: 'https://i.imgur.com/FUoMZLX.gif',
     intents: [
       <Button.Reset>DONATE MORE MONEY</Button.Reset>,
-      <Button action='/generate/beggar'>GET YOUR BEGGAR FRAME</Button>
     ]
   })
 });
